@@ -14,10 +14,6 @@ app.post("/add-task",async(req,resq)=>{
     }
     
 })
-app.get("/",(res,resq)=>{
-    resq.send({
-        massage:"gopi",
-        kiya: "done"
-    })
+
 })
 app.listen(3500)
