@@ -1,8 +1,9 @@
-const {MongoClient} = require("mongodb")
+import {MongoClient} from 'mongodb'
 const url = "";
-const dbname ="";
+const dbname ="node-project";
+export const collectionname ="todo"
 const client = new MongoClient(url)
-const  connection = async ( ) => {
+export const  connection = async ( ) => {
     const connect = await client.connect();
-    return connect.db(dbname)
+    return await connect.db(dbname)
 }
