@@ -7,6 +7,7 @@ app.post("/add-task",async(req,resq)=>{
     const db = await connection();
     const collection = await db.collection(collectionname)
     const result = await collection.insertOne(req.body);
+    
     if(result){
         resq.send({massage:'new task added', success:true, result})
     }else{
