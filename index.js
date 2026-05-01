@@ -18,5 +18,18 @@ app.post("/add-task",async(req,resq)=>{
     }
     
 })
+app.get("/tasks",async(req,resq)=>{
+    const db = await connection();
+     
+    const collection = await db.collection(collectionname)
+    const result = await collection.find().toArray();
+    
+    if(result){
+        resq.send({massage:'Task list fetch', success:true, result})
+    }else{
+        resq.send({massage:'task  list not fetch', success:false})
+    }
+    
+})
 
 app.listen(3500)

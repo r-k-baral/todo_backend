@@ -1,7 +1,7 @@
 
 // import { MongoClient } from 'mongodb';
 
-// const url = "";
+// const url = "om";
 
 // const client = new MongoClient(url);
 
@@ -28,7 +28,7 @@
 
 
 import {MongoClient} from 'mongodb'
-const url = "";
+const url = "sandeep";
 const dbname ="node-project";
 export const collectionname ="todo"
 const client = new MongoClient(url)

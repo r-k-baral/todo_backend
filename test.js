@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-const uri = "";
+const uri = "papa";
 
 const client = new MongoClient(uri);
 
