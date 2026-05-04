@@ -28,7 +28,7 @@
 
 
 import {MongoClient} from 'mongodb'
-const url = "sandeep";
+const url = "";
 const dbname ="node-project";
 export const collectionname ="todo"
 const client = new MongoClient(url)
