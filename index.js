@@ -31,7 +31,20 @@ app.get("/tasks",async(req,resq)=>{
     }
     
 })
-
+app.delete("/delete/:id",async(req,resq)=>{
+    const db = await connection();
+    const id = req.params.id
+     
+    const collection = await db.collection(collectionname)
+    const result = await collection.deleteOne({_id:new ObjectId(id)});
+    
+    if(result){
+        resq.send({massage:'Task list deleted', success:true, result})
+    }else{
+        resq.send({massage:'task  list not deleted', success:false})
+    }
+    
+})
 
 app.put("/task/:id", async (req, resq) => {
   const { id } = req.params;
