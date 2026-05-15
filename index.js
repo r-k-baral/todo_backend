@@ -2,10 +2,41 @@ import express, { response } from 'express'
 import { collectionname, connection } from './dbconfig.js'
  import cors from 'cors'
 import { ObjectId } from "mongodb";
+import jwt from 'jsonwebtoken';
 const app = express()
 app.use(express.json());
 app.use(cors())
 
+
+app.post('/signup', async(req,resp)=>{
+    const UserDate = req.body
+
+    console.log(UserDate);
+    if(UserDate.email && UserDate.password && UserDate.name)
+        {  const db = await connection();
+        const collectionNAM = await  db.collection('users')
+        const result = await collectionNAM.insertOne(UserDate)
+
+        if(result){
+             jwt.sign(UserDate,'Google',{expiresIn:'5d'},(error, token)=>{
+        console.log(token);
+        resp.send({
+            success:true,
+            message:'sigUp complete go and login',
+            token
+        })
+        
+    })
+        } else({
+             success:false,
+            message:'sigUp not done',
+           
+        })
+       
+}
+  
+    
+})
 app.post("/add-task",async(req,resq)=>{
     const db = await connection();
      
