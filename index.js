@@ -37,6 +37,61 @@ app.post('/signup', async(req,resp)=>{
   
     
 })
+
+// login route 
+
+app.post('/login', async (req, resp) => {
+    // 1. Get the email and password sent by the React frontend
+    const { email, password } = req.body;
+
+    // 2. Check if the user filled both fields
+    if (email && password) {
+        
+        const db = await connection();
+        const collectionNAM = await db.collection('users');
+
+        // 3. Search the database for a user with this EXACT email and password
+        const user = await collectionNAM.findOne({ email: email, password: password });
+
+        // 4. If a matching user is found
+        if (user) {
+            
+            // Generate a token for the user (just like in signup)
+            jwt.sign({ user }, 'Google', { expiresIn: '5d' }, (error, token) => {
+                if (error) {
+                    return resp.send({ success: false, message: 'Token generation failed' });
+                }
+                
+                // YAY! Login successful. We send success: true
+                resp.send({
+                    success: true,
+                    message: 'Login successful!',
+                    token: token,
+                    name: user.name // Sending the user's name back so you can show "Welcome, [Name]" on the frontend
+                });
+            });
+
+        } else {
+            // X Login Failed: Wrong email or password
+            resp.send({
+                success: false,
+                message: 'Invalid email or password'
+            });
+        }
+
+    } else {
+        // X Login Failed: Fields are empty
+        resp.send({
+            success: false,
+            message: 'Please provide both email and password'
+        });
+    }
+});
+
+
+
+
+
 app.post("/add-task",async(req,resq)=>{
     const db = await connection();
      
