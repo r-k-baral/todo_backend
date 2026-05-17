@@ -3,9 +3,14 @@ import { collectionname, connection } from './dbconfig.js'
  import cors from 'cors'
 import { ObjectId } from "mongodb";
 import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 const app = express()
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials:true
+}))
+app.use(cookieParser());
 
 
 app.post('/signup', async(req,resp)=>{
@@ -52,7 +57,7 @@ app.post('/login', async (req, resp) => {
 
         // 3. Search the database for a user with this EXACT email and password
         const user = await collectionNAM.findOne({ email: email, password: password });
-
+            
         // 4. If a matching user is found
         if (user) {
             
@@ -67,6 +72,7 @@ app.post('/login', async (req, resp) => {
                     success: true,
                     message: 'Login successful!',
                     token: token,
+                    email: user.email,
                     name: user.name // Sending the user's name back so you can show "Welcome, [Name]" on the frontend
                 });
             });
@@ -105,8 +111,10 @@ app.post("/add-task",async(req,resq)=>{
     }
     
 })
-app.get("/tasks",async(req,resq)=>{
+app.get("/tasks",veryfiJwtTooken,async(req,resq)=>{
     const db = await connection();
+    console.log("cookie",req.cookies['token']);
+    
      
     const collection = await db.collection(collectionname)
     const result = await collection.find().toArray();
@@ -118,6 +126,25 @@ app.get("/tasks",async(req,resq)=>{
     }
     
 })
+
+function veryfiJwtTooken (req, resp, next){
+// console.log("veryfi Jwt Tooken",req.cookies['token'])
+const token = req.cookies['token'];
+jwt.verify(token, 'Google',(error, decoded)=>{
+    if(error){
+        return resp.send("invalid tooken")
+    } 
+   
+    
+    console.log(decoded);
+    next()
+            
+    
+   
+    
+})
+
+}
 app.delete("/delete/:id",async(req,resq)=>{
     const db = await connection();
     const id = req.params.id
