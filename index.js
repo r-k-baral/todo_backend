@@ -98,7 +98,7 @@ app.post('/login', async (req, resp) => {
 
 
 
-app.post("/add-task",async(req,resq)=>{
+app.post("/add-task",veryfiJwtTooken,async(req,resq)=>{
     const db = await connection();
      
     const collection = await db.collection(collectionname)
@@ -127,25 +127,8 @@ app.get("/tasks",veryfiJwtTooken,async(req,resq)=>{
     
 })
 
-function veryfiJwtTooken (req, resp, next){
-// console.log("veryfi Jwt Tooken",req.cookies['token'])
-const token = req.cookies['token'];
-jwt.verify(token, 'Google',(error, decoded)=>{
-    if(error){
-        return resp.send("invalid tooken")
-    } 
-   
-    
-    console.log(decoded);
-    next()
-            
-    
-   
-    
-})
 
-}
-app.delete("/delete/:id",async(req,resq)=>{
+app.delete("/delete/:id",veryfiJwtTooken,async(req,resq)=>{
     const db = await connection();
     const id = req.params.id
      
@@ -162,7 +145,7 @@ app.delete("/delete/:id",async(req,resq)=>{
 
 // update 
 
-app.get("/task/:id", async (req, resq) => {
+app.get("/task/:id", veryfiJwtTooken,async (req, resq) => {
     try {
         const db = await connection();
         const collection = await db.collection(collectionname)
@@ -180,7 +163,7 @@ app.get("/task/:id", async (req, resq) => {
 })
 
 // --- UPDATE WHOLE TASK (Needed for the Save Changes button) ---
-app.put("/tasks/:id", async (req, resq) => {
+app.put("/tasks/:id", veryfiJwtTooken,async (req, resq) => {
     try {
         const db = await connection();
         const collection = await db.collection(collectionname);
@@ -201,7 +184,7 @@ app.put("/tasks/:id", async (req, resq) => {
 });
 
 // --- TOGGLE CHECKBOX (Needed for the List completion status) ---
-app.put("/task/:id", async (req, resq) => {
+app.put("/task/:id", veryfiJwtTooken,async (req, resq) => {
     try {
         const db = await connection();
         const collection = await db.collection(collectionname);
@@ -226,6 +209,23 @@ app.put("/task/:id", async (req, resq) => {
     }
 });
 
+function veryfiJwtTooken (req, resp, next){
+// console.log("veryfi Jwt Tooken",req.cookies['token'])
+const token = req.cookies['token'];
+jwt.verify(token, 'Google',(error, decoded)=>{
+    if(error){
+        return resp.send("invalid tooken")
+    } 
+   
+    
+    console.log(decoded);
+    next()
+            
+    
+   
+    
+})
 
+}
 
 app.listen(3500)
