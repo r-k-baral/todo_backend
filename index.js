@@ -23,7 +23,7 @@ app.post('/signup', async(req,resp)=>{
         const result = await collectionNAM.insertOne(UserDate)
 
         if(result){
-             jwt.sign(UserDate,'Google',{expiresIn:'5d'},(error, token)=>{
+             jwt.sign({ _id: result.insertedId },'Google',{expiresIn:'5d'},(error, token)=>{
         console.log(token);
         resp.send({
             success:true,
@@ -32,11 +32,11 @@ app.post('/signup', async(req,resp)=>{
         })
         
     })
-        } else({
+        } else {  resp.send({
              success:false,
             message:'sigUp not done',
            
-        })
+        })}
        
 }
   
@@ -62,7 +62,7 @@ app.post('/login', async (req, resp) => {
         if (user) {
             
             // Generate a token for the user (just like in signup)
-            jwt.sign({ user }, 'Google', { expiresIn: '5d' }, (error, token) => {
+            jwt.sign({ _id: user._id.toString() }, 'Google', { expiresIn: '5d' }, (error, token) => {
                 if (error) {
                     return resp.send({ success: false, message: 'Token generation failed' });
                 }
@@ -72,8 +72,7 @@ app.post('/login', async (req, resp) => {
                     success: true,
                     message: 'Login successful!',
                     token: token,
-                    email: user.email,
-                    name: user.name // Sending the user's name back so you can show "Welcome, [Name]" on the frontend
+                    name: user.name // Sending the user's name back so i can show "Welcome, [Name]" on the frontend
                 });
             });
 
@@ -102,7 +101,12 @@ app.post("/add-task",veryfiJwtTooken,async(req,resq)=>{
     const db = await connection();
      
     const collection = await db.collection(collectionname)
-    const result = await collection.insertOne(req.body);
+    // 💡 Frontend se aaya data + Backend se nikali hui User ID
+    const taskToSave = {
+        ...req.body,
+        userId: new ObjectId(req.user._id) // String ID ko MongoDB ObjectId mein badalna zaroori hai
+    };
+    const result = await collection.insertOne(taskToSave);
     
     if(result){
         resq.send({massage:'new task added', success:true, result})
@@ -117,12 +121,14 @@ app.get("/tasks",veryfiJwtTooken,async(req,resq)=>{
     
      
     const collection = await db.collection(collectionname)
-    const result = await collection.find().toArray();
+    const result = await collection.find({ 
+        userId: new ObjectId(req.user._id) 
+    }).toArray();
     
     if(result){
-        resq.send({massage:'Task list fetch', success:true, result})
+        resq.send({message:'Task list fetch', success:true, result})
     }else{
-        resq.send({massage:'task  list not fetch', success:false})
+        resq.send({message:'task  list not fetch', success:false})
     }
     
 })
@@ -133,12 +139,15 @@ app.delete("/delete/:id",veryfiJwtTooken,async(req,resq)=>{
     const id = req.params.id
      
     const collection = await db.collection(collectionname)
-    const result = await collection.deleteOne({_id:new ObjectId(id)});
+    const result = await collection.deleteOne({
+        _id: new ObjectId(req.params.id),
+        userId: new ObjectId(req.user._id) 
+    });
     
-    if(result){
+    if(result.deletedCount > 0){
         resq.send({massage:'Task list deleted', success:true, result})
     }else{
-        resq.send({massage:'task  list not deleted', success:false})
+        resq.send({ message: 'Unauthorized or not found', success: false });
     }
     
 })
@@ -173,25 +182,37 @@ app.put("/tasks/:id", veryfiJwtTooken,async (req, resq) => {
         const { _id, ...updatedData } = req.body; 
 
         const result = await collection.updateOne(
-            { _id: new ObjectId(id) },
+            { _id: new ObjectId(id) , userId: new ObjectId(req.user._id) },  //Security: Sirf apna task update ho
             { $set: updatedData }
         );
-
-        resq.send({ success: true, massage: "Task fully updated", result });
+       // Check matchedCount instead of just result
+        if (result.matchedCount > 0) {
+            resq.send({ 
+                success: true, 
+                message: "Task updated successfully", 
+                modifiedCount: result.modifiedCount 
+            });
+        } else {
+            resq.send({ 
+                success: false, 
+                message: "Unauthorized or Task not found" 
+            });
+        }
+       
     } catch (error) {
         resq.send({ success: false, error });
     }
 });
 
 // --- TOGGLE CHECKBOX (Needed for the List completion status) ---
-app.put("/task/:id", veryfiJwtTooken,async (req, resq) => {
+app.put("/task/:id",veryfiJwtTooken,async (req, resq) => {
     try {
         const db = await connection();
         const collection = await db.collection(collectionname);
         const id = req.params.id;
 
         // Find the task first to see if it is currently true or false
-        const task = await collection.findOne({ _id: new ObjectId(id) });
+        const task = await collection.findOne({ _id: new ObjectId(id),userId: new ObjectId(req.user._id) });
 
         if (!task) {
             return resq.send({ success: false, massage: "Task not found" });
@@ -217,8 +238,12 @@ jwt.verify(token, 'Google',(error, decoded)=>{
         return resp.send("invalid tooken")
     } 
    
-    
-    console.log(decoded);
+   // 💡 DECODED mein humne jo ID bheji thi woh mil jayegi
+        // Hum ise req.user mein save kar rahe hain taaki '/add-task' 
+        // ya '/tasks' ko pata chal sake ki user kaun hai.
+        req.user = decoded; 
+        
+        console.log("User Identified:", req.user._id);
     next()
             
     
