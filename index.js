@@ -1,4 +1,5 @@
 import express, { response } from 'express'
+import bcrypt from 'bcrypt';
 import { collectionname, connection } from './dbconfig.js'
  import cors from 'cors'
 import { ObjectId } from "mongodb";
@@ -13,86 +14,187 @@ app.use(cors({
 app.use(cookieParser());
 
 
-app.post('/signup', async(req,resp)=>{
-    const UserDate = req.body
+// app.post('/signup', async(req,resp)=>{
+//     const { name, email, password } = req.body; 
 
-    console.log(UserDate);
-    if(UserDate.email && UserDate.password && UserDate.name)
-        {  const db = await connection();
-        const collectionNAM = await  db.collection('users')
-        const result = await collectionNAM.insertOne(UserDate)
+//     console.log({ name, email, password });
 
-        if(result){
-             jwt.sign({ _id: result.insertedId },'Google',{expiresIn:'5d'},(error, token)=>{
-        console.log(token);
-        resp.send({
-            success:true,
-            message:'sigUp complete go and login',
-            token
-        })
+
+//     if(email && password && name)
+//         {  const db = await connection();
+//         const collectionNAM = await  db.collection('users')    // ya last change
+//         // 2. Password ko "Hash" karein (Salt round: 10)
+//         const hashedPassword = await bcrypt.hash(password, 10);
+
+//         console.log("Signup Hashed Password Check:", hashedPassword);
+//         const result = await collectionNAM.insertOne({
+//             name: name,
+//             email: email,
+//             password: hashedPassword // Plain password ki jagah hash save ho raha hai
+//         })
+
+
+//         if(result){
+//              jwt.sign({ _id: result.insertedId },'Google',{expiresIn:'5d'},(error, token)=>{
+//         console.log(token);
+//         resp.send({
+//             success:true,
+//             message:'sigUp complete go and login',
+//             token
+//         })
         
-    })
-        } else {  resp.send({
-             success:false,
-            message:'sigUp not done',
+//     })
+//         } else {  resp.send({
+//              success:false,
+//             message:'sigUp not done',
            
-        })}
+//         })}
        
-}
+// }
   
     
-})
+// })
 
-// login route 
+// // login route 
 
-app.post('/login', async (req, resp) => {
-    // 1. Get the email and password sent by the React frontend
-    const { email, password } = req.body;
+// app.post('/login', async (req, resp) => {
+//     // 1. Get the email and password sent by the React frontend
+//     const { email, password } = req.body;
 
-    // 2. Check if the user filled both fields
-    if (email && password) {
+//     // 2. Check if the user filled both fields
+//     if (email && password) {
         
-        const db = await connection();
-        const collectionNAM = await db.collection('users');
+//         const db = await connection();
+//         const collectionNAM = await db.collection('users');
 
-        // 3. Search the database for a user with this EXACT email and password
-        const user = await collectionNAM.findOne({ email: email, password: password });
+        
+
+
+//         // 3. Search the database for a user with this EXACT email and password
+//         const user = await collectionNAM.findOne({ email: email});
             
-        // 4. If a matching user is found
-        if (user) {
+//         // 4. If a matching user is found
+//         // if (user) {
             
-            // Generate a token for the user (just like in signup)
-            jwt.sign({ _id: user._id.toString() }, 'Google', { expiresIn: '5d' }, (error, token) => {
-                if (error) {
-                    return resp.send({ success: false, message: 'Token generation failed' });
-                }
+//         //     // Generate a token for the user (just like in signup)
+//         //     jwt.sign({ _id: user._id.toString() }, 'Google', { expiresIn: '5d' }, (error, token) => {
+//         //         if (error) {
+//         //             return resp.send({ success: false, message: 'Token generation failed' });
+//         //         }
                 
-                // YAY! Login successful. We send success: true
-                resp.send({
-                    success: true,
-                    message: 'Login successful!',
-                    token: token,
-                    name: user.name // Sending the user's name back so i can show "Welcome, [Name]" on the frontend
+//         //         // YAY! Login successful. We send success: true
+//         //         resp.send({
+//         //             success: true,
+//         //             message: 'Login successful!',
+//         //             token: token,
+//         //             name: user.name // Sending the user's name back so i can show "Welcome, [Name]" on the frontend
+//         //         });
+//         //     });
+
+//         // } else {
+//         //     // X Login Failed: Wrong email or password
+//         //     resp.send({
+//         //         success: false,
+//         //         message: 'Invalid email or password'
+//         //     });
+//         // }
+//         if (user) {
+//             // 2. Database wale hash ko aur input wale password ko compare karo
+//             const isMatch = await bcrypt.compare(password, user.password);
+
+//             if (isMatch) {
+//                 // ✅ Password sahi hai
+//                 jwt.sign({ _id: user._id.toString() }, 'Google', { expiresIn: '5d' }, (error, token) => {
+//                     resp.send({
+//                         success: true,
+//                         message: 'Login successful!',
+//                         token: token,
+//                         name: user.name
+//                     });
+//                 });
+//             } else {
+//                 resp.send({ success: false, message: 'Invalid credentials' });
+//             }
+//         } else {
+//             // 🚨 FIX: Agar user database mein nahi mila, toh response bhejna zaroori hai!
+//             resp.send({ success: false, message: 'Invalid credentials' });
+//         }
+
+//     } else {
+//         // X Login Failed: Fields are empty
+//         resp.send({
+//             success: false,
+//             message: 'Please provide both email and password'
+//         });
+//     }
+// });
+
+
+
+app.post('/signup', async (req, resp) => {
+    try {
+        const { name, email, password } = req.body; 
+        console.log("1. Frontend se aaya data:", { name, email, password });
+
+        if (email && password && name) {
+            const db = await connection();
+            const collectionNAM = await db.collection('users');
+            
+            const hashedPassword = await bcrypt.hash(password, 10);
+            console.log("2. Generated Hash:", hashedPassword);
+
+            const result = await collectionNAM.insertOne({
+                name,
+                email,
+                password: hashedPassword
+            });
+            console.log("3. DB Insertion Result:", result.acknowledged);
+
+            if (result) {
+                jwt.sign({ _id: result.insertedId }, 'Google', { expiresIn: '5d' }, (error, token) => {
+                    resp.send({ success: true, message: 'signUp complete', token });
                 });
-            });
-
+            }
         } else {
-            // X Login Failed: Wrong email or password
-            resp.send({
-                success: false,
-                message: 'Invalid email or password'
-            });
+            resp.send({ success: false, message: 'All fields are required' });
         }
-
-    } else {
-        // X Login Failed: Fields are empty
-        resp.send({
-            success: false,
-            message: 'Please provide both email and password'
-        });
+    } catch (error) {
+        console.log("❌ Signup Main Error:", error.message);
+        resp.send({ success: false, message: error.message });
     }
 });
 
+app.post('/login', async (req, resp) => {
+    try {
+        const { email, password } = req.body;
+        console.log("1. Login attempting for:", email);
+
+        const db = await connection();
+        const collectionNAM = await db.collection('users');
+
+        const user = await collectionNAM.findOne({ email: email });
+        console.log("2. User found in DB?:", user ? "YES" : "NO");
+            
+        if (user) {
+            console.log("3. Comparing:", password, "with", user.password);
+            const isMatch = await bcrypt.compare(password, user.password);
+            console.log("4. Bcrypt match result:", isMatch);
+
+            if (isMatch) {
+                jwt.sign({ _id: user._id.toString() }, 'Google', { expiresIn: '5d' }, (error, token) => {
+                    resp.send({ success: true, message: 'Login successful!', token, name: user.name });
+                });
+            } else {
+                resp.send({ success: false, message: 'Invalid credentials (Password mismatch)' });
+            }
+        } else {
+            resp.send({ success: false, message: 'Invalid credentials (User not found)' });
+        }
+    } catch (error) {
+        console.log("❌ Login Main Error:", error.message);
+        resp.send({ success: false, message: error.message });
+    }
+});
 
 
 
@@ -159,7 +261,7 @@ app.get("/task/:id", veryfiJwtTooken,async (req, resq) => {
         const db = await connection();
         const collection = await db.collection(collectionname)
         const id = req.params.id
-        const result = await collection.findOne({_id: new ObjectId(id)});
+        const result = await collection.findOne({_id: new ObjectId(id) , userId: new ObjectId(req.user._id)});
         
         if(result){
             resq.send({massage:'Task fetch', success:true, result})
@@ -179,7 +281,7 @@ app.put("/tasks/:id", veryfiJwtTooken,async (req, resq) => {
         const id = req.params.id;
         
         // We remove _id from req.body because MongoDB crashes if you try to update the _id field
-        const { _id, ...updatedData } = req.body; 
+        const { _id,userId: bodyUserId ,...updatedData } = req.body; 
 
         const result = await collection.updateOne(
             { _id: new ObjectId(id) , userId: new ObjectId(req.user._id) },  //Security: Sirf apna task update ho

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rakesh Baral - Resume</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 12mm 14mm 12mm 14mm;
+            background-color: #ffffff;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #2d3748;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            font-size: 10pt;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2b6cb0;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .name {
+            font-size: 22pt;
+            font-weight: 700;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0 0 4px 0;
+        }
+        
+        .contact-info {
+            font-size: 9pt;
+            color: #4a5568;
+            margin: 0;
+        }
+        
+        .contact-info a {
+            color: #2b6cb0;
+            text-decoration: none;
+        }
+        
+        .section {
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 2px;
+            margin: 0 0 8px 0;
+            page-break-after: avoid;
+        }
+        
+        .skills-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+        }
+        
+        .skills-table td {
+            padding: 3px 0;
+            vertical-align: top;
+        }
+        
+        .skills-category {
+            font-weight: 700;
+            color: #2c5282;
+            width: 20%;
+        }
+        
+        .skills-list {
+            color: #2d3748;
+            width: 80%;
+        }
+        
+        .item-block {
+            margin-bottom: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .item-header {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+        }
+        
+        .item-header td {
+            padding: 0;
+            vertical-align: bottom;
+        }
+        
+        .item-title {
+            font-weight: 700;
+            font-size: 10.5pt;
+            color: #2d3748;
+            text-align: left;
+        }
+        
+        .item-org {
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+        
+        .item-meta {
+            text-align: right;
+            font-size: 9pt;
+            color: #718096;
+            font-style: italic;
+        }
+        
+        .tech-stack {
+            font-size: 9pt;
+            margin: 1px 0 3px 0;
+            color: #4a5568;
+        }
+        
+        .tech-stack-label {
+            font-weight: 700;
+            color: #2c5282;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+            color: #3182ce;
+        }
+        
+        li span {
+            color: #2d3748;
+        }
+        
+        .edu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .edu-table td {
+            padding: 3px 0;
+            vertical-align: top;
+        }
+        
+        .edu-degree {
+            font-weight: 700;
+            color: #2d3748;
+            width: 55%;
+        }
+        
+        .edu-inst {
+            color: #4a5568;
+            width: 30%;
+        }
+        
+        .edu-year {
+            text-align: right;
+            color: #718096;
+            width: 15%;
+            font-size: 9pt;
+        }
+        
+        .strengths-list {
+            margin: 0;
+            padding-left: 16px;
+        }
+        
+        .strengths-list li {
+            margin-bottom: 2px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="name">Rakesh Baral</h1>
+        <p class="contact-info">
+            Subash Nagar, Jammu - 180005 &nbsp;|&nbsp; 
+            Mobile: +91 6005451594 &nbsp;|&nbsp; 
+            Email: <a href="mailto:rkbaral334@gmail.com">rkbaral334@gmail.com</a>
+            <br>
+            LinkedIn: <a href="https://www.linkedin.com/in/rakesh-baral-52b026258">linkedin.com/in/rakesh-baral-52b026258</a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Technical Skills</h2>
+        <table class="skills-table">
+            <tr>
+                <td class="skills-category">Frontend:</td>
+                <td class="skills-list">HTML, CSS, JavaScript, TypeScript, React.js, Tailwind CSS</td>
+            </tr>
+            <tr>
+                <td class="skills-category">Backend & DB:</td>
+                <td class="skills-list">Node.js, Express.js, MongoDB</td>
+            </tr>
+            <tr>
+                <td class="skills-category">Security & Tools:</td>
+                <td class="skills-list">JWT (JSON Web Tokens), Bcrypt, GSAP Animations, Git</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Professional Experience</h2>
+        
+        <div class="item-block">
+            <table class="item-header">
+                <tr>
+                    <td class="item-title">Full Stack Developer <span class="item-org">(Internship)</span></td>
+                    <td class="item-meta">Apna Time</td>
+                </tr>
+            </table>
+            <ul>
+                <li><span>Developed and maintained full-stack web applications, ensuring smooth integration between frontend UI components and backend server logic.</span></li>
+                <li><span>Collaborated on improving application performance and optimizing asynchronous data workflows.</span></li>
+            </ul>
+        </div>
+        
+        <div class="item-block">
+            <table class="item-header">
+                <tr>
+                    <td class="item-title">Freelance Full Stack Developer</td>
+                    <td class="item-meta">Monk Solution Limited</td>
+                </tr>
+            </table>
+            <ul>
+                <li><span>Delivered end-to-end web solutions for clear client specifications using modern JavaScript and TypeScript ecosystems.</span></li>
+                <li><span>Designed responsive, pixel-perfect user interfaces and integrated robust backend RESTful APIs and databases.</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Projects</h2>
+        
+        <div class="item-block">
+            <table class="item-header">
+                <tr>
+                    <td class="item-title">Full-Stack Cyber-Panel To-Do Application</td>
+                    <td class="item-meta">Flagship Project</td>
+                </tr>
+            </table>
+            <div class="tech-stack"><span class="tech-stack-label">Tech Stack:</span> React.js, Node.js, Express.js, MongoDB, JWT, Bcrypt, Tailwind CSS, GSAP</div>
+            <ul>
+                <li><span><strong>Architecture & Security:</strong> Implemented a secure multi-user architecture with full data isolation using MongoDB ObjectIds, paired with HTTP-only JWT cookie session verification and bcrypt password hashing.</span></li>
+                <li><span><strong>API & UI/UX:</strong> Developed secure RESTful CRUD routes restricted dynamically via custom validation middleware, alongside an interactive, pixel-perfect user interface optimized with priority sorting and dynamic animations.</span></li>
+            </ul>
+        </div>
+        
+        <div class="item-block">
+            <table class="item-header">
+                <tr>
+                    <td class="item-title">Video Call Web App</td>
+                    <td class="item-meta">Core Project</td>
+                </tr>
+            </table>
+            <div class="tech-stack"><span class="tech-stack-label">Tech Stack:</span> React.js, JavaScript, HTML, CSS</div>
+            <ul>
+                <li><span>A versatile communication tool designed to simplify remote interaction for virtual meetings and interviews, engineered with a key focus on real-time data streaming and adaptive layouts.</span></li>
+            </ul>
+        </div>
+        
+        <div class="item-block">
+            <table class="item-header">
+                <tr>
+                    <td class="item-title">Iris Flower Classifier</td>
+                    <td class="item-meta">Data Science Project</td>
+                </tr>
+            </table>
+            <div class="tech-stack"><span class="tech-stack-label">Tech Stack:</span> Machine Learning, Python</div>
+            <ul>
+                <li><span>An analytical project utilizing classification algorithms to parse morphological and color variations to accurately identify plant species.</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Educational Qualification</h2>
+        <table class="edu-table">
+            <tr>
+                <td class="edu-degree">B.Tech. in Computer Science and Engineering</td>
+                <td class="edu-inst">Punjab Technical University (PTU)</td>
+                <td class="edu-year">Completed</td>
+            </tr>
+            <tr>
+                <td class="edu-degree">3 Months Diploma in Computer Networking Peripherals</td>
+                <td class="edu-inst">Technical Training</td>
+                <td class="edu-year">Completed</td>
+            </tr>
+            <tr>
+                <td class="edu-degree">12th Standard (Higher Secondary)</td>
+                <td class="edu-inst">J&K BOSE</td>
+                <td class="edu-year">Completed</td>
+            </tr>
+            <tr>
+                <td class="edu-degree">10th Standard (Matriculation)</td>
+                <td class="edu-inst">J&K BOSE</td>
+                <td class="edu-year">Completed</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Key Strengths</h2>
+        <ul class="strengths-list">
+            <li><span>Strong analytical ability and adaptive problem-solving skills.</span></li>
+            <li><span>Highly motivated and quick learner with a keen interest in mastering emerging tech stacks.</span></li>
+        </ul>
+    </div>
+
+</body>
+</html>
